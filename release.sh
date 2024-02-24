@@ -46,6 +46,11 @@ case "$1" in
             cargo build --release
             gzip -c target/release/pact-protobuf-plugin.exe > release_artifacts/pact-protobuf-plugin-windows-x86_64.exe.gz
             openssl dgst -sha256 -r release_artifacts/pact-protobuf-plugin-windows-x86_64.exe.gz > release_artifacts/pact-protobuf-plugin-windows-x86_64.exe.gz.sha256
+            echo -- Build the aarch64 release artifacts --
+            cargo clean
+            cargo build --target aarch64-pc-windows-msvc --release
+            gzip -c target/aarch64-pc-windows-msvc/pact-protobuf-plugin.exe > release_artifacts/pact-protobuf-plugin-windows-aarch64.exe.gz
+            openssl dgst -sha256 -r release_artifacts/pact-protobuf-plugin-windows-aarch64.exe.gz > release_artifacts/pact-protobuf-plugin-windows-aarch64.exe.gz.sha256
             ;;
   macOS)    echo  "Building for OSX"
             cargo build --release
