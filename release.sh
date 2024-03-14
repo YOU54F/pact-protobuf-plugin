@@ -15,6 +15,7 @@ mkdir -p release_artifacts
 
 case "$1" in
   Linux)    echo "Building for Linux"
+            cargo install cross@0.2.5
             echo -- Build the musl x86_64 release artifacts --
             cargo clean
             cross build --release --target=x86_64-unknown-linux-musl
