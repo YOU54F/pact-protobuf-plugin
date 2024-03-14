@@ -42,12 +42,6 @@ jobs:
           RUST_BACKTRACE: 1
         shell: bash
 
-  musl-build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - run: |
-         docker run --rm --user "$(id -u)":"$(id -g)" -v $(pwd):/workspace -w /workspace -t pactfoundation/rust-musl-build ./scripts/musl-build.sh
 
   pact-verify:
     runs-on: ubuntu-latest
