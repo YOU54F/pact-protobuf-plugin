@@ -36,18 +36,19 @@ install_cross() {
 
 build_linux_x86_64() {
     install_cross
+    # cargo clean
     cross build --target=x86_64-unknown-linux-musl "${cargo_flags[@]}"
     if [[ "${cargo_flags[*]}" =~ "--release" ]]; then
         gzip_and_sum \
             "$CARGO_TARGET_DIR/x86_64-unknown-linux-musl/release/${APP}" \
             "$ARTIFACTS_DIR/${APP}-linux-x86_64.gz"
-
+    # cargo clean
     fi
-    #cargo clean
 }
 
 build_linux_aarch64() {
     install_cross
+    # cargo clean
     cross build --target=aarch64-unknown-linux-musl "${cargo_flags[@]}"
 
     if [[ "${cargo_flags[*]}" =~ "--release" ]]; then
@@ -55,7 +56,6 @@ build_linux_aarch64() {
             "$CARGO_TARGET_DIR/aarch64-unknown-linux-musl/release/${APP}" \
             "$ARTIFACTS_DIR/${APP}-linux-aarch64.gz"
     fi
-    #cargo clean
 }
 # Build the x86_64 darwin release
 build_macos_x86_64() {

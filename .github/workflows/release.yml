@@ -22,7 +22,7 @@ jobs:
       matrix:
         include:
           - operating-system: ubuntu-20.04
-            targets: x86_64-unknown-linux-gnu,x86_64-unknown-linux-musl,aarch64-unknown-linux-gnu,aarch64-unknown-linux-musl
+            targets: x86_64-unknown-linux-musl,aarch64-unknown-linux-musl
           - operating-system: windows-2019
             targets: aarch64-pc-windows-msvc,x86_64-pc-windows-msvc
           - operating-system: macos-12
