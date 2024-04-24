@@ -10,25 +10,26 @@ ARTIFACTS_DIR=${ARTIFACTS_DIR:-"$RUST_DIR/release_artifacts"}
 mkdir -p "$ARTIFACTS_DIR"
 export CARGO_TARGET_DIR=${CARO_TARGET_DIR:-"$RUST_DIR/target"}
 
-if [ $# -lt 1 ]
+if [ $# -lt 2 ]
 then
-    echo "Usage : $0 <Linux|Windows|macOS> <cargo flags>"
+    echo "Usage : $0 <Linux|Windows|macOS> <release version> <cargo flags>"
     exit
 fi
 
 APP=pact-protobuf-plugin
 OS=$1
 shift;
+VERSION=$1
+shift;
 echo Building Release for "$OS"
 # All flags passed to this script are passed to cargo.
 cargo_flags=( "$@" )
-# build_manifest() {
-#     cp pact-plugin.json release_artifacts
-#     NEXT=$(echo "$2" | cut -d\- -f2)
-#     sed -e 's/VERSION=\"0.1.5\"/VERSION=\"'${NEXT}'\"/' scripts/install-plugin.sh > target/artifacts/install-plugin.sh
-#     openssl dgst -sha256 -r $ARTIFACTS_DIR/install-plugin.sh > target/artifacts/install-plugin.sh.sha256
-
-# }
+build_manifest() {
+    cp pact-plugin.json release_artifacts
+    NEXT=$(echo "$VERSION" | cut -d\- -f2)
+    sed -e 's/VERSION=\"0.1.5\"/VERSION=\"'${NEXT}'\"/' "$RUST_DIR/scripts/install-plugin.sh" > "$ARTIFACTS_DIR/install-plugin.sh"
+    openssl dgst -sha256 -r $ARTIFACTS_DIR/install-plugin.sh > "$ARTIFACTS_DIR/install-plugin.sh.sha256"
+}
 install_cross() {
     cargo install cross@0.2.5
 }
@@ -111,6 +112,7 @@ case "$OS" in
   Linux)    echo "Building for Linux"
             build_linux_x86_64
             build_linux_aarch64
+            build_manifest
             ;;
   Windows)  echo "Building for windows"
             build_windows_x86_64
