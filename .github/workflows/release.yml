@@ -4,12 +4,12 @@ on:
   release:
     types: [published]
 
-    pull_request:
-      branches:
-        - main
-    push:
-      branches:
-        - feat/musl_built_binaries
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - feat/musl_built_binaries
 
 concurrency:
   group: ci-${{ github.ref }}
