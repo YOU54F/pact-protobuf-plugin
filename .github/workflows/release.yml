@@ -4,6 +4,13 @@ on:
   release:
     types: [published]
 
+    pull_request:
+      branches:
+        - main
+    push:
+      branches:
+        - musl_built_binaries
+
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: false
