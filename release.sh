@@ -26,7 +26,16 @@ echo Building Release for "$OS"
 cargo_flags=( "$@" )
 build_manifest() {
     cp pact-plugin.json release_artifacts
-    NEXT=$(echo "$VERSION" | cut -d\- -f2)
+    NEXT=$(echo "$VERSION" | sed 's/^refs\/tags\/v-//')
+    # get latest release tag, if NEXT still contains refs
+    if [[ "${NEXT}" =~ "refs"* ]]; then
+        CRATE_VERSION=$(cat Cargo.toml| grep 'version = ".*"' -m1 | cut -d '"' -f 2) 
+        echo "defaulting NEXT=$VERSION to version from Cargo.toml $CRATE_VERSION"
+        NEXT=$CRATE_VERSION
+        # LATEST_RELEASE=$(echo $(curl -s https://api.github.com/repos/pact-foundation/pact-stub-server/releases/latest | jq -r '.name') |  sed 's/v//') 
+        # echo "defaulting NEXT=$VERSION to latest release $LATEST_RELEASE"
+        # NEXT=$LATEST_RELEASE
+    fi
     sed -e 's/VERSION=\"0.1.5\"/VERSION=\"'${NEXT}'\"/' "$RUST_DIR/scripts/install-plugin.sh" > "$ARTIFACTS_DIR/install-plugin.sh"
     openssl dgst -sha256 -r $ARTIFACTS_DIR/install-plugin.sh > "$ARTIFACTS_DIR/install-plugin.sh.sha256"
 }
@@ -110,8 +119,8 @@ build_windows_aarch64() {
 
 case "$OS" in
   Linux)    echo "Building for Linux"
-            build_linux_x86_64
-            build_linux_aarch64
+            # build_linux_x86_64
+            # build_linux_aarch64
             build_manifest
             ;;
   Windows)  echo "Building for windows"
