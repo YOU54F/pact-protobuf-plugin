@@ -25,7 +25,6 @@ echo Building Release for "$OS"
 # All flags passed to this script are passed to cargo.
 cargo_flags=( "$@" )
 build_manifest() {
-    cp pact-plugin.json release_artifacts
     NEXT=$(echo "$VERSION" | sed 's/^refs\/tags\/v-//')
     # get latest release tag, if NEXT still contains refs
     if [[ "${NEXT}" =~ "refs"* ]]; then
@@ -36,7 +35,8 @@ build_manifest() {
         # echo "defaulting NEXT=$VERSION to latest release $LATEST_RELEASE"
         # NEXT=$LATEST_RELEASE
     fi
-    sed -e 's/VERSION=\"0.1.5\"/VERSION=\"'${NEXT}'\"/' "$RUST_DIR/scripts/install-plugin.sh" > "$ARTIFACTS_DIR/install-plugin.sh"
+    sed -e 's/\"version\": \".*\"/\"version\": \"'${NEXT}'\"/' "$RUST_DIR/pact-plugin.json" > "$ARTIFACTS_DIR/pact-plugin.json"
+    sed -e 's/VERSION=\".*\"/VERSION=\"'${NEXT}'\"/' "$RUST_DIR/scripts/install-plugin.sh" > "$ARTIFACTS_DIR/install-plugin.sh"
     openssl dgst -sha256 -r $ARTIFACTS_DIR/install-plugin.sh > "$ARTIFACTS_DIR/install-plugin.sh.sha256"
 }
 install_cross() {
@@ -119,8 +119,8 @@ build_windows_aarch64() {
 
 case "$OS" in
   Linux)    echo "Building for Linux"
-            build_linux_x86_64
-            build_linux_aarch64
+            # build_linux_x86_64
+            # build_linux_aarch64
             build_manifest
             ;;
   Windows)  echo "Building for windows"
