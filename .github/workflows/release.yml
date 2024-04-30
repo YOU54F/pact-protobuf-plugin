@@ -10,6 +10,7 @@ on:
   push:
     branches:
       - feat/musl_linux_win_aarch64
+      - feat/slim_bins
 
 concurrency:
   group: ci-${{ github.ref }}
